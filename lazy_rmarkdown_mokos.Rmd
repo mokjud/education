@@ -1,0 +1,58 @@
+---
+title: "lazy sloth"
+author: "Judit Mokos"
+date: "9/4/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# LIBRARIES  
+# install them first, if you haven't used them. 
+library(knitr)
+library(tidyverse)
+
+# READING DATA 
+#download the cleaned data for this github: https://github.com/mokjud/education/blob/main/ksh_15.1.1.37_meteorological_data_of_hungary_and_budapest.csv and
+#df <- read.csv("the_folder_you_saved_it/ksh_15.1.1.37_meteorological_data_of_hungary_and_budapest.csv")
+
+#or use R to download it directly from the github
+
+df <- read_csv("https://raw.github.com/mokjud/education/main/ksh_15.1.1.37_meteorological_data_of_hungary_and_budapest.csv")
+
+
+```
+# Third Best Practice In Data Analysis and Statistics Symposium  
+_Pécs, 2023_  
+This is an example to do data reports in [RMarkdown](https://rmarkdown.rstudio.com/index.html).  
+Our data comes from the [KHS](https://www.ksh.hu/). You can download the original dataset from [here](https://www.ksh.hu/stadat_files/kor/en/kor0037.html).  
+
+
+This is a dataset about meteorological data of Hungary and Budapest.  
+
+Here is a nice pic about a baby sloth enjoying the weather of Budapest. It's also show how you can add inline figure from webpages.  
+`r include_graphics("https://www.zoobudapest.com/uploads/collection/1/image/lajharkolyok07%20foto%20Bagosi%20Zoltan.JPG")`
+
+
+Let's look at the data!  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, dpi=360,  eval=T}
+# this is a code chunk in R
+
+# kable() will create a nice table  
+kable(head(df))
+kable(head(df), col.names = c("year", "mean temp", "precipitation", "number of rainy days", "sunshine duration", "number of frosty days", "number of heat days", "number of hot flash days", "location"))
+```
+
+Now let's try a plot!  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, dpi=360, eval=T}
+ggplot(df, aes(x = year, y = number_of_hot_flash_days, color = location))+ 
+  theme_bw()+
+  geom_point()+
+  scale_y_continuous(name = "number of hot flash days")
+```
+
+Use inline coding!  
+The highest mean temperature in Budapest was `r max(filter(df, location == "Budapest")$mean_temperature, na.rm=T)` at the year of `r df$year[which(filter(df, location == "Budapest")$mean_temperature == max(filter(df, location == "Budapest")$mean_temperature, na.rm=T))]`.  
+
