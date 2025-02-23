@@ -1,0 +1,173 @@
+---
+title: "Advanced R"
+author: "mokos judit"
+
+output: word_document 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+### LIBRARIES ###
+library(tidyverse)
+library(knitr) # for knitting
+
+### DATA ###
+meterology_url <- "https://raw.githubusercontent.com/mokjud/education/refs/heads/main/ksh_15.1.1.37_meteorological_data_of_hungary_and_budapest.csv"
+df <- read.csv(meterology_url)
+str(covid)
+```
+
+**Hi Everyone,**  
+This document teaches you some basic RMarkdown magic. If you are bored with my voice just go through and play with it. When you finished solve the task that are at the bottom of this document.  
+
+RMarkdown has two basic part: the text and the code chunks. Text are white, R chunks are grey.  
+You can write R script into the R chunk and plain text or markdown text into the white part.  
+You can create a document using the Knit button. That's called knitting ore rendering.  
+
+Be careful with hashtags: hashtag has different meaning in markdwon (creating headlines) and in R (comment).  
+Be careful with space(s): one space is a space. two spaces mean line break.  
+
+# R chunk  
+
+An R chunk starts and ends with three apostrophe.  
+To define an R chunk use r.  
+You can define other chunks (for example phyton). You can use more than one chunk type in one document.  
+  
+Attributes of R chunks:  
+
+* eval TRUE Whether to evaluate the code and include its results  
+* echo TRUE Whether to display code along with its results  
+* warning TRUE Whether to display warnings  
+* error FALSE Whether to display errors  
+* message TRUE Whether to display messages  
+* tidy FALSE Whether to reformat code in a tidy way when displaying it  
+* results "markup" "markup", "asis", "hold", or "hide"  
+* cache FALSE Whether to cache results for future renders  
+* comment: hashtag character to preface results with  
+* fig.width 7 Width in inches for plots created in chunk  
+* fig.height 7 Height in inches for plots created in chunk  
+
+  
+*Q: What does the attributes in the following R chunk tell you?*
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+# this chunk does nothing. It's empty. 
+1+2
+```
+
+# Plot 
+
+Today we will work with data of Hungarian weather. The source of the data is [the Hungarian Central Statistical Office's site]https://www.ksh.hu/stadat_files/kor/hu/kor0037.html). 
+
+Everything that you would do in R will be done in the R chunk(s). Except when you work inline.  
+
+How to create a plot?  
+Data was read in the first chunk. (I like to put all the important thing, such as data, libraries, sources, etc in the first chunk, but it's not mandatory. You can read a new data in any chunk).  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, dpi=360, fig.height=5, fig.width=7}
+ggplot(filter(df, location == "Hungary"), aes(x=year, y=mean_temperature))+
+    theme_bw()+
+    geom_line(color = 'grey', size = 1)+
+    geom_point()+
+    scale_x_continuous(name= "Year")+
+    scale_y_continuous(name="average temperature of the year")+
+  ggtitle("Does global warming effect Hungary?")
+```
+
+# Computing  
+
+You can compute things in the chunks on inline. 
+
+## compute things in the chunk: 
+What is the highest and the lowest average yearly temperature in the dataset? 
+First date:  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+min(df$mean_temperature)
+```
+
+Last date:  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+max(df$mean_temperature)
+```
+
+What is the average of the average yearly temperature in Hungary?  
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+mean(filter(df, location == "Hungary")$mean_temperature)
+```
+
+
+## Compute things inline
+
+It is possible to insert computation(s) in the text.  
+In Hungary, between  1900 and 1950 the average temperature was `r mean(filter(df, location == "Hungary" & year <1950)$mean_temperature)`, while between 1950 and 2022 it was `r mean(filter(df, location == "Hungary" & year > 1950)$mean_temperature)`.  
+
+# Table
+
+Inserting tables is easy. 
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
+df_to_insert <- df[c('year', 'mean_temperature', 'number_of_heat_days')]
+
+kable(head(df_to_insert), col.names = c("Year", "Average Temperature", "Number of Heat Days"))
+
+```
+
+
+# Tasks  
+
+## 1. plot  
+
+Create a plot showing the number of heat days in Budapest. Insert it here. For the plot use chunk(s). Include a short description that contains the overall number of year when the number of heat days was higher than 10. 
+
+## 2. table  
+
+Create a table that has the following columns: location (Hungary or Budapest), time (before 1950 or after 1950), average of the yearly mean temperature, average of the number of heat days. 
+
+
+## 3. inline code  
+
+Using inline code complete the following sentences:  
+
+In Hungary, between 1900 and 2022, XXX% of the years had a higher average temperature than 10 degrees. while in Budapest, this ratio was XXX%.  
+In Budapest, during the 21th century, the warmest year was XXXX.  
+While the avearge number of rainy days in Hungary between 1900 and 1950 was XXX, this measurement became XXX between 1950 and 2000, and XXXX int he 21th century.  
+
+
+## 4. different output file
+Create this file in html and pdf.  
+
+
+# Extra tasks
+
+## Footnote  
+Insert a footnote here that contains your name.  
+
+## PPT
+Create a power point presentation that contains at least one plot and 3 slides.  
+
+## Page break  
+Insert a page break here.  
+
+## Loops
+Create a loop that creates plots about all the monts' daily new infected cases.  
+
+## Different chunks
+Include a phyton chunk, in case you know python.  
+
+## Online picture
+
+Insert a picture from a webpage here.
+
+
+
+
+
+
+
+
+```{r, results='asis', echo=FALSE, error=FALSE, message=FALSE, warning=FALSE, dpi=360}
+```
